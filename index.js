@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
 const socketio = require('socket.io')(http)
 
 socketio.on("connection", (userSocket) => {
-    userSocket.on("Send message", (data => {
+    userSocket.on("send_message", (data => {
         console.log(data["message"]);
         userSocket.broadcast.emit("recieve message", data)
     }))
