@@ -19,8 +19,10 @@ const port = process.env.PORT || 8080
 app.get('/', (req, res) => {
     console.log("pinged");
 
-    if (index > 3 || index < 0)
+    if (index > AudioArray.length - 1)
         index = 0;
+    if (index < 0)
+        index = AudioArray.length - 1
     const filePath = __dirname + `/audiofiles/${AudioArray[index]}.mp4`
     console.log(filePath)
     stat = fs.statSync(filePath)
@@ -44,18 +46,18 @@ socketio.on("connection", (userSocket) => {
     userSocket.on("next_track", (data) => {
         console.log(data["message"]);
         index++;
-        
-        socketio.emit("track_changed",data)
+
+        socketio.emit("track_changed", data)
     })
 
     userSocket.on("prev_track", (data) => {
         console.log(data["message"]);
         index--;
-        
-        socketio.emit("track_changed",data)
+
+        socketio.emit("track_changed", data)
     })
 
-    
+
 })
 
 http.listen(port, () => console.log(`listening on port ${port}`))
