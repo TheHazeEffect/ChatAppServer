@@ -11,6 +11,7 @@ const socketio = require('socket.io')(http)
 
 socketio.on("connection", (userSocket) => {
     userSocket.on("send_message", (data) => {
+        console.log(data["message"]);
         userSocket.broadcast.emit("receive_message", data)
     })
 })
