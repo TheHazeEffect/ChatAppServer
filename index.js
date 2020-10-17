@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
     if (index > 3 || index < 0)
         index = 0;
-    const filePath = __dirname + `\\audiofiles\\${AudioArray[index]}.mp4`
+    const filePath = __dirname + `/audiofiles/${AudioArray[index]}.mp4`
     console.log(filePath)
     stat = fs.statSync(filePath)
 
