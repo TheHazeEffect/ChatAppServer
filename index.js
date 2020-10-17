@@ -1,20 +1,19 @@
 const app = require('express')()
 const http = require('http').createServer(app)
-port = process.env.PORT || 8080
+
 
 app.get('/', (req, res) => {
-    res.send("Node Server is running, Yay!!")
+    res.send("Node Server is running. Yay!!")
 })
 
-//socket Logic
+//Socket Logic
 const socketio = require('socket.io')(http)
 
 socketio.on("connection", (userSocket) => {
-    userSocket.on("send_message", (data => {
-        console.log(data["message"]);
-        userSocket.broadcast.emit("recieve_message", data)
-    }))
+    userSocket.on("send_message", (data) => {
+        userSocket.broadcast.emit("receive_message", data)
+    })
 })
 
+http.listen(process.env.PORT)
 
-http.listen(port);
