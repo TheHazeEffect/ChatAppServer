@@ -14,18 +14,7 @@ const AudioArray = [
 let index = 0;
 
 
-void function nextTrack() {
-    index++;
-    if (index > AudioArray.length - 1)
-        index = 0;
 
-}
-
-void function prevTrack() {
-    index--;
-    if (index < 0)
-        index = AudioArray.length - 1
-}
 
 const port = process.env.PORT || 8080
 
@@ -53,6 +42,19 @@ app.get('/', (req, res) => {
 const socketio = require('socket.io')(http)
 
 socketio.on("connection", (userSocket) => {
+
+    void function nextTrack() {
+        index++;
+        if (index > AudioArray.length - 1)
+            index = 0;
+
+    }
+
+    void function prevTrack() {
+        index--;
+        if (index < 0)
+            index = AudioArray.length - 1
+    }
 
     userSocket.on("next_track", (data) => {
         console.log(data["message"]);
