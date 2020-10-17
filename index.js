@@ -44,27 +44,27 @@ const socketio = require('socket.io')(http)
 socketio.on("connection", (userSocket) => {
 
     void function nextTrack() {
-        index++;
-        if (index > AudioArray.length - 1)
-            index = 0;
+        
 
     }
 
     void function prevTrack() {
-        index--;
-        if (index < 0)
-            index = AudioArray.length - 1
+        
     }
 
     userSocket.on("next_track", (data) => {
         console.log(data["message"]);
-        nextTrack()
+        index++;
+        if (index > AudioArray.length - 1)
+            index = 0;
         socketio.emit("track_changed", data)
     })
 
     userSocket.on("prev_track", (data) => {
         console.log(data["message"]);
-        prevTrack()
+        index--;
+        if (index < 0)
+            index = AudioArray.length - 1
 
         socketio.emit("track_changed", data)
     })
