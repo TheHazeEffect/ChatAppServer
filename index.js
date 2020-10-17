@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 
 
 
-    const filePath = __dirname + `/audiofiles/${AudioArray[index]}.mp4`
+    const filePath = __dirname + `/audiofiles/${AudioArray[index]}.mp3`
     console.log(filePath)
     stat = fs.statSync(filePath)
 
