@@ -4,13 +4,36 @@ const ss = require('socket.io-stream');
 const stream = ss.createStream();
 
 const fs = require('fs')
-const filePath = __dirname + '\\audiofiles\\Audio1.mp4'
-console.log(filePath)
+
+const AudioArray = [
+    'Audio1',
+    'Audio2',
+    'Audio3',
+    'Audio4'
+]
+let index = 0;
+
 
 const port = process.env.PORT || 8080
 
 app.get('/', (req, res) => {
-    res.send("Node Server is running. Yay!!")
+    console.log("pinged");
+
+    if (index > 3 || index < 0)
+        index = 0;
+    const filePath = __dirname + `\\audiofiles\\${AudioArray[index]}.mp4`
+    console.log(filePath)
+    stat = fs.statSync(filePath)
+
+
+    res.writeHead(200, {
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': stat.size
+    });
+
+    // We replaced all the event handlers with a simple call to util.pump()
+    fs.createReadStream(filePath).pipe(res);
+
 })
 
 //Socket Logic
@@ -18,15 +41,21 @@ const socketio = require('socket.io')(http)
 
 socketio.on("connection", (userSocket) => {
 
-    userSocket.on("play_music", (data) => {
-        console.log("ping")
+    userSocket.on("next_track", (data) => {
         console.log(data["message"]);
-
-        ss(userSocket).emit("listen_music", stream);
-        // userSocket.broadcast.emit("listen_music", data)
-        fs.createReadStream(filePath).pipe(stream);
-
+        index++;
+        
+        socketio.emit("track_changed",data)
     })
+
+    userSocket.on("prev_track", (data) => {
+        console.log(data["message"]);
+        index--;
+        
+        socketio.emit("track_changed",data)
+    })
+
+    
 })
 
 http.listen(port, () => console.log(`listening on port ${port}`))
