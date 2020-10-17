@@ -14,15 +14,26 @@ const AudioArray = [
 let index = 0;
 
 
+void function nextTrack() {
+    index++;
+    if (index > AudioArray.length - 1)
+        index = 0;
+
+}
+
+void function prevTrack() {
+    index--;
+    if (index < 0)
+        index = AudioArray.length - 1
+}
+
 const port = process.env.PORT || 8080
 
 app.get('/', (req, res) => {
     console.log("pinged");
 
-    if (index > AudioArray.length - 1)
-        index = 0;
-    if (index < 0)
-        index = AudioArray.length - 1
+
+
     const filePath = __dirname + `/audiofiles/${AudioArray[index]}.mp4`
     console.log(filePath)
     stat = fs.statSync(filePath)
@@ -45,14 +56,13 @@ socketio.on("connection", (userSocket) => {
 
     userSocket.on("next_track", (data) => {
         console.log(data["message"]);
-        index++;
-
+        nextTrack()
         socketio.emit("track_changed", data)
     })
 
     userSocket.on("prev_track", (data) => {
         console.log(data["message"]);
-        index--;
+        prevTrack()
 
         socketio.emit("track_changed", data)
     })
